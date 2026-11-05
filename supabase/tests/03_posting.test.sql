@@ -1,7 +1,7 @@
 -- Task 4: the posting service is the single write path, validates input,
 -- produces balanced postings atomically, and is scoped to the caller.
 begin;
-select plan(43);
+select plan(44);
 
 select tests.create_user('alice@test.local') as alice \gset
 select tests.create_user('bob@test.local') as bob \gset
@@ -74,11 +74,11 @@ select throws_like(format($$ select public.void_transaction(%L, '') $$, :'exp'),
   '%reason%', 'voiding requires a reason');
 
 -- reconcile_account (DOD-ACC)
-select public.reconcile_account(:'bank', 800000) as adj \gset
+select public.reconcile_account_on_date(:'bank', 800000, (now() at time zone 'Asia/Seoul')::date) as adj \gset
 select is(tests.balance(:'bank'), 800000::bigint, 'reconciliation brings the balance to the actual amount');
 select is((select amount from public.transactions where id = :'adj'), -30000::bigint,
   'the adjustment is the exact difference');
-select is(public.reconcile_account(:'bank', 800000), null, 'reconciling a matching balance posts nothing');
+select is(public.reconcile_account_on_date(:'bank', 800000, (now() at time zone 'Asia/Seoul')::date), null, 'reconciling a matching balance posts nothing');
 
 -- Input validation
 select throws_like(format($$ select public.post_transaction('{"workspace_id": "%s", "type": "expense", "account_id": "%s", "category_id": "%s", "amount": 0, "occurred_at": "2026-11-03T12:00:00+09:00"}') $$, :'ws', :'bank', :'food'),
@@ -128,8 +128,10 @@ select throws_ok(format($$ select public.update_transaction(%L, '{"amount": 1}')
   '42501', null, 'Bob cannot edit Alice''s transaction');
 select throws_ok(format($$ select public.void_transaction(%L, 'nope') $$, :'exp'),
   '42501', null, 'Bob cannot void Alice''s transaction');
-select throws_ok(format($$ select public.reconcile_account(%L, 0) $$, :'bank'),
+select throws_ok(format($$ select public.reconcile_account_on_date(%L, 0, '2026-11-01') $$, :'bank'),
   '42501', null, 'Bob cannot reconcile Alice''s account');
+select throws_ok(format($$ select public.reconcile_account(%L, 0) $$, :'bank'),
+  '42501', null, 'users cannot call the internal reconcile_account directly');
 
 select tests.authenticate_as_anon();
 select throws_ok(format($$ select public.create_account(%L, 'X', 'cash') $$, :'ws'),

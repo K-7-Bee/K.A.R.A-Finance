@@ -38,6 +38,7 @@ Local development needs Docker running (for the local Supabase stack).
 | `pnpm db:reset` | Recreate the local database and apply every migration |
 | `pnpm db:test` | Database tests (pgTAP, `supabase/tests/`) |
 | `pnpm db:new <name>` | Create a new migration file |
+| `pnpm db:types` | Regenerate `src/lib/database.types.ts` from the local database (run after every migration) |
 
 Copy `.env.example` to `.env.local` and fill in the local values printed by `pnpm db:start`. Local auth emails (sign-up confirmation, password reset) are delivered to Mailpit at http://127.0.0.1:54324.
 

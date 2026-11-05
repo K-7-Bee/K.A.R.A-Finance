@@ -10,6 +10,8 @@ export const NAV_SECTIONS: NavSection[] = [
   { href: "/overview", label: "Overview", stage: 1 },
   { href: "/transactions", label: "Transactions", stage: 1 },
   { href: "/accounts", label: "Accounts", stage: 1 },
+  // Not in CLAUDE.md's section list; the MVP requires category management.
+  { href: "/categories", label: "Categories", stage: 1 },
   { href: "/budgets", label: "Budgets", stage: 2 },
   { href: "/goals", label: "Goals", stage: 2 },
   { href: "/analytics", label: "Analytics", stage: 3 },

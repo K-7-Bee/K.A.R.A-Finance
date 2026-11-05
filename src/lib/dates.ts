@@ -29,3 +29,13 @@ export function localMonthRange(timeZone: string, now: Date = new Date()): { fro
   const mm = String(month).padStart(2, "0");
   return { from: `${year}-${mm}-01`, to: `${year}-${mm}-${String(lastDay).padStart(2, "0")}` };
 }
+
+/** The workspace-local calendar date (YYYY-MM-DD) of an instant, for <input type="date">. */
+export function localDateInput(iso: string | Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: usableTimeZone(timeZone),
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(iso));
+}
