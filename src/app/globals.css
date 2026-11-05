@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* KARA design tokens. Colour carries meaning — see CLAUDE.md "Design system". */
+@theme {
+  --color-midnight: #17243d; /* foundation, navigation */
+  --color-violet: #7657f6;   /* AI features, highlights */
+  --color-mint: #35c7a0;     /* income, savings, positive cash flow */
+  --color-blue: #3998f5;     /* accounts, information */
+  --color-amber: #ffb84d;    /* goals, reminders, achievements */
+  --color-coral: #f16f91;    /* expenses, losses, warnings */
+  --color-cloud: #f3f5fa;    /* light surfaces, backgrounds */
+}
+
+:root {
+  --background: var(--color-cloud);
+  --foreground: var(--color-midnight);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
