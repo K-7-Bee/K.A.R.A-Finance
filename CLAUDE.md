@@ -33,12 +33,13 @@ Local development needs Docker running (for the local Supabase stack).
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | TypeScript check |
 | `pnpm test` | App unit tests (Vitest) |
+| `pnpm test:e2e` | End-to-end tests (Playwright; builds and starts the app, needs local Supabase) |
 | `pnpm db:start` / `pnpm db:stop` | Start or stop local Supabase |
 | `pnpm db:reset` | Recreate the local database and apply every migration |
 | `pnpm db:test` | Database tests (pgTAP, `supabase/tests/`) |
 | `pnpm db:new <name>` | Create a new migration file |
 
-Copy `.env.example` to `.env.local` and fill in the local values printed by `pnpm db:start`.
+Copy `.env.example` to `.env.local` and fill in the local values printed by `pnpm db:start`. Local auth emails (sign-up confirmation, password reset) are delivered to Mailpit at http://127.0.0.1:54324.
 
 ## Ledger architecture
 

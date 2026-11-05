@@ -1,6 +1,6 @@
 -- Task 2: core schema and signup bootstrap.
 begin;
-select plan(14);
+select plan(15);
 
 select tests.create_user('alice@test.local') as alice \gset
 select tests.personal_ws(:'alice') as ws \gset
@@ -32,6 +32,9 @@ select throws_ok(
 select throws_ok(
   format($$ update public.workspaces set timezone = 'Mars/Olympus' where id = %L $$, :'ws'),
   '23514', null, 'invalid timezones are rejected');
+select throws_ok(
+  format($$ update public.workspaces set timezone = 'Factory' where id = %L $$, :'ws'),
+  '23514', null, 'Postgres-only pseudo zones such as Factory are rejected');
 
 -- FIN-3: no binary floating point or unscaled numeric anywhere in public tables
 select is(

@@ -1,6 +1,6 @@
 -- Task 5: append-only audit log.
 begin;
-select plan(14);
+select plan(15);
 
 select tests.create_user('alice@test.local') as alice \gset
 select tests.create_user('bob@test.local') as bob \gset
@@ -33,6 +33,11 @@ select is((select reason from public.audit_log where table_name = 'transactions'
   'duplicate entry', 'voids are audited with their reason');
 select is((select count(*)::int from public.audit_log where table_name = 'categories' and after->>'name' = 'Pets'), 1,
   'category changes are audited');
+update public.profiles set display_name = 'Alice' where id = :'alice';
+select tests.clear_authentication();
+select is((select actor_id from public.audit_log where table_name = 'profiles' and row_id = :'alice' and action = 'update'), :'alice'::uuid,
+  'profile changes are audited with the actor');
+select tests.authenticate_as(:'alice');
 
 -- Append-only
 select throws_ok($$ update public.audit_log set reason = 'tampered' $$, '42501', null, 'users cannot update the audit log');
